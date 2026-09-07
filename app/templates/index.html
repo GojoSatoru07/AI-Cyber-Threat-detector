@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cyber Threat Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <h1>🛡️ AI Cyber Threat Detector</h1>
+        <p class="subtitle">Unsupervised anomaly detection over captured network packets.</p>
+    </header>
+
+    <main class="container">
+        <section class="panel">
+            <div class="panel-head">
+                <h2>Status</h2>
+                <button class="btn btn-ghost" id="refresh-btn" type="button">Refresh</button>
+            </div>
+            <dl class="status-grid">
+                <div><dt>Model</dt><dd id="status-model">checking…</dd></div>
+                <div><dt>Dataset</dt><dd id="status-data">checking…</dd></div>
+                <div><dt>Last trained</dt><dd id="status-trained">—</dd></div>
+            </dl>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head"><h2>Actions</h2></div>
+            <div class="actions">
+                <button class="btn btn-primary" id="train-btn" type="button">Train model</button>
+                <button class="btn" id="detect-btn" type="button">Detect anomalies</button>
+            </div>
+            <p class="hint">Training fits an IsolationForest over the packet dataset. Detection scores every
+               packet and lists the most anomalous first.</p>
+            <div class="message" id="message" role="status" aria-live="polite" hidden></div>
+        </section>
+
+        <section class="panel" id="dashboard" hidden>
+            <div class="panel-head"><h2>Overview</h2></div>
+            <div class="stat-row">
+                <div class="stat"><span class="stat__label" id="stat-total-label">Packets analysed</span><span class="stat__value" id="stat-total">—</span></div>
+                <div class="stat"><span class="stat__label">Flagged</span><span class="stat__value" id="stat-flagged">—</span></div>
+                <div class="stat"><span class="stat__label">Flag rate</span><span class="stat__value" id="stat-rate">—</span></div>
+                <div class="stat"><span class="stat__label">Lowest score</span><span class="stat__value" id="stat-min">—</span></div>
+            </div>
+
+            <div class="chart-block">
+                <h3 class="chart-title">Anomaly score distribution</h3>
+                <p class="chart-sub" id="chart-scores-sub">Where the model drew its line.</p>
+                <div class="chart-host" id="chart-scores"></div>
+            </div>
+
+            <div class="chart-block">
+                <h3 class="chart-title" id="chart-protocols-title">Traffic by protocol</h3>
+                <p class="chart-sub" id="chart-protocols-sub">Which protocols carry the flagged packets.</p>
+                <div class="chart-host" id="chart-protocols"></div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <h2>Detected anomalies</h2>
+                <span class="badge" id="anomaly-count" hidden></span>
+            </div>
+            <div id="results">
+                <p class="empty">Nothing detected yet.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

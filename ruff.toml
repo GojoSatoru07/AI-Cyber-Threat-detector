@@ -1,0 +1,19 @@
+# Python 3.9 is the floor: `from __future__ import annotations` is what lets the
+# modern `X | None` syntax appear in annotations on that version.
+target-version = "py39"
+line-length = 100
+exclude = [".venv", "data", "models"]
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RUF", "DTZ", "S"]
+ignore = [
+    "S101",  # asserts are the point in tests
+    "E501",  # long lines are caught by the formatter, not worth failing on
+]
+
+[lint.per-file-ignores]
+"scripts/*" = ["S603", "S607"]
+# `random` seeds synthetic demo data and test fixtures — no security role.
+"scripts/generate_packets.py" = ["S311"]
+"scripts/benchmark_models.py" = ["S311"]
+"tests/*" = ["S311"]
