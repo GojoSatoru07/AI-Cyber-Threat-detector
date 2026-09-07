@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Project artefacts — regenerate, don't commit
+data/*.csv
+models/*.pkl
+models/*.sig
+models/*.key
+*.pkl
+
+# Tooling
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
