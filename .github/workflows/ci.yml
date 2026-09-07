@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.9 is the declared floor; 3.12 is what it should actually run on.
+        python-version: ["3.9", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Test
+        run: pytest -q
+
+      - name: End-to-end detection check
+        # Guards the property the whole design rests on: attacks in the capture
+        # are found, and a clean capture raises nothing.
+        run: |
+          python scripts/generate_packets.py --output data/attacks.csv
+          python scripts/generate_packets.py --output data/clean.csv --no-attacks
+          BASELINE_FILE=data/clean.csv DATA_FILE=data/attacks.csv \
+            python scripts/check_detection.py
